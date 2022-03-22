@@ -7,6 +7,14 @@ contract Faucet {
     mapping(address => bool) private funders;
     mapping(uint256 => address) private lutFunders; //look up table
 
+    modifier limitWithdraw(uint256 withdrawAmount) {
+        require(
+            withdrawAmount <= 100000000000000000,
+            "Cannot withdraw more than 0.1 ether"
+        );
+        _; //will execute the rest of the function statement
+    }
+
     //Receives ETH - called when you make a tx that doesnt specify function name to call
     //external functions are part of the contract interface which means they can be called via contracts and other tx
     receive() external payable {}
@@ -24,6 +32,20 @@ contract Faucet {
             funders[funder] = true; //add to mapping
             lutFunders[index] = funder;
         }
+    }
+
+    function withdraw(uint256 withdrawAmount)
+        external
+        limitWithdraw(withdrawAmount)
+    {
+        //checks
+        //minimum, check if the contract has enoufh balance
+        //require condition has to be met in order to execute the next line of code -- else the message will display
+        require(
+            withdrawAmount <= 100000000000000000,
+            "Cannot withdraw more than 0.1 ether"
+        );
+        payable(msg.sender).transfer(withdrawAmount);
     }
 
     //To return mapping, transfer values ifrom mapping into an [] and return that array
@@ -50,3 +72,6 @@ contract Faucet {
 
     //to talk to the node on the network you can make JSON_RPC http calls
 }
+
+//const instance = await Faucet.deployed()
+// instance.addFunds({from: accounts[0], value: "2000000000000000000"})
