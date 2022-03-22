@@ -2,9 +2,11 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "./Owned.sol";
+import "./Logger.sol";
+import "./IFaucet.sol";
 
 //Faucet inherits Owned functionalities and properties
-contract Faucet is Owned {
+contract Faucet is Owned, Logger, IFaucet {
     //address[] public funders;
     uint256 public numberOfFunders;
 
@@ -23,8 +25,13 @@ contract Faucet is Owned {
     //external functions are part of the contract interface which means they can be called via contracts and other tx
     receive() external payable {}
 
+    //Must implement function from Logger
+    function emitLog() public pure override returns (bytes32) {
+        return "Hello World!";
+    }
+
     //Add funds to our smart contract
-    function addFunds() external payable {
+    function addFunds() external payable override {
         //msg is a global variable which contains transaction data
         //push sender to funders array - to record address
         //funders.push(msg.sender); -- array push
@@ -40,6 +47,8 @@ contract Faucet is Owned {
 
     function withdraw(uint256 withdrawAmount)
         external
+        payable
+        override
         limitWithdraw(withdrawAmount)
     {
         //checks
