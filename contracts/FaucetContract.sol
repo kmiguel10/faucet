@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-contract Faucet {
+import "./Owned.sol";
+
+//Faucet inherits Owned functionalities and properties
+contract Faucet is Owned {
     //address[] public funders;
     uint256 public numberOfFunders;
+
     mapping(address => bool) private funders;
     mapping(uint256 => address) private lutFunders; //look up table
 
@@ -61,6 +65,14 @@ contract Faucet {
     function getFunderAtIndex(uint8 index) external view returns (address) {
         //address[] memory _funders = getAllFunders();
         return lutFunders[index];
+    }
+
+    function test1() external onlyOwner {
+        //only owner has access to
+    }
+
+    function test2() external onlyOwner {
+        //only owner has access to
     }
 
     //read-only call, no gas fee
