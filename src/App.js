@@ -16,7 +16,6 @@ function App() {
   const [account, setAccount] = useState(null);
   const [balance, setBalance] = useState(null);
   const [shouldReload, reload] = useState(false);
-
   //True if connected to an account and has a contract
   const canConnectToContract = account && web3Api.contract;
 
@@ -26,7 +25,8 @@ function App() {
   //Triggers when account changed - display the current account
   //ensures that account is not displayed when logged out of metamask
   const setAccountListener = (provider) => {
-    provider.on("accountsChanged", (_) => window.location.reload()); //accountsChanged is from metamask
+    provider.on("accountsChanged", (_) => window.location.reload()); //accountsChanged is from metamask - reload when account is changed
+    provider.on("chainChanged", (_) => window.location.reload()); //chainChanged is from metamask - reload when network is changed
 
     // provider._jsonRpcConnection.events.on("notification", (payload) => {
     //   const { method } = payload;
@@ -165,7 +165,7 @@ function App() {
           className="button is-primary"
           onClick={withdraw}
         >
-          Withdraw
+          Withdraw 0.1 eth
         </button>
       </div>
     </div>
