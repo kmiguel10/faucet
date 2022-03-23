@@ -20,8 +20,16 @@ function App() {
   const reloadEffect = useCallback(() => reload(!shouldReload), [shouldReload]);
 
   //Triggers when account changed - display the current account
+  //ensures that account is not displayed when logged out of metamask
   const setAccountListener = (provider) => {
-    provider.on("accountsChanged", (accounts) => setAccount(accounts[0])); //accountsChanged is from metamask
+    provider.on("accountsChanged", (_) => window.location.reload()); //accountsChanged is from metamask
+
+    // provider._jsonRpcConnection.events.on("notification", (payload) => {
+    //   const { method } = payload;
+    //   if (method == "metamask_unlockStateChanged") {
+    //     setAccount(null);
+    //   }
+    // });
   };
 
   //will load once - runs code after React has updated the DOM
@@ -114,10 +122,18 @@ function App() {
         <div className="balance-view is-size-2 my-4">
           Current Balance: <strong>{balance}</strong> ETH
         </div>
-        <button className="button is-link mr-2" onClick={addFunds}>
+        <button
+          disabled={!account}
+          className="button is-link mr-2"
+          onClick={addFunds}
+        >
           Donate 1 eth
         </button>
-        <button className="button is-primary" onClick={withdraw}>
+        <button
+          disabled={!account}
+          className="button is-primary"
+          onClick={withdraw}
+        >
           Withdraw
         </button>
       </div>
