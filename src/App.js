@@ -16,7 +16,8 @@ function App() {
   const [balance, setBalance] = useState(null);
   const [shouldReload, reload] = useState(false);
 
-  const reloadEffect = () => reload(!shouldReload);
+  //Create a new instance, when shouldReloadValue changes -- which is tied to AddFunds
+  const reloadEffect = useCallback(() => reload(!shouldReload), [shouldReload]);
 
   //will load once - runs code after React has updated the DOM
   useEffect(() => {
@@ -70,7 +71,17 @@ function App() {
 
     //window.location.reload(); //reload the browser
     reloadEffect();
-  }, [web3Api, account]);
+  }, [web3Api, account, reloadEffect]);
+
+  //Function to withdraw funds
+  const withdraw = async () => {
+    const { contract, web3 } = web3Api;
+    const withdrawAmount = web3.utils.toWei("0.1", "ether");
+    await contract.withdraw(withdrawAmount, {
+      from: account,
+    });
+    reloadEffect();
+  };
 
   console.log(web3Api.web3);
 
@@ -100,7 +111,9 @@ function App() {
         <button className="button is-link mr-2" onClick={addFunds}>
           Donate 1 eth
         </button>
-        <button className="button is-primary">Withdraw</button>
+        <button className="button is-primary" onClick={withdraw}>
+          Withdraw
+        </button>
       </div>
     </div>
   );
