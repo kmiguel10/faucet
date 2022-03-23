@@ -17,8 +17,8 @@ function App() {
   useEffect(() => {
     const loadProvider = async () => {
       const provider = await detectEthereumProvider();
-      const contract = await loadContract("Faucet"); //load smart contract
-      debugger;
+      const contract = await loadContract("Faucet", provider); //load smart contract
+
       if (provider) {
         //provider.request({ method: "eth_requestAccounts" });
         setWeb3Api({
