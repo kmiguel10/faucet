@@ -19,6 +19,11 @@ function App() {
   //Create a new instance, when shouldReloadValue changes -- which is tied to AddFunds
   const reloadEffect = useCallback(() => reload(!shouldReload), [shouldReload]);
 
+  //Triggers when account changed - display the current account
+  const setAccountListener = (provider) => {
+    provider.on("accountsChanged", (accounts) => setAccount(accounts[0])); //accountsChanged is from metamask
+  };
+
   //will load once - runs code after React has updated the DOM
   useEffect(() => {
     const loadProvider = async () => {
@@ -27,6 +32,7 @@ function App() {
 
       if (provider) {
         //provider.request({ method: "eth_requestAccounts" });
+        setAccountListener(provider);
         setWeb3Api({
           web3: new Web3(provider), //we will use this globally
           provider,
