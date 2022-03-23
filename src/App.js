@@ -12,6 +12,7 @@ function App() {
   });
 
   const [account, setAccount] = useState(null);
+  const [balance, setBalance] = useState(null);
 
   //will load once - runs code after React has updated the DOM
   useEffect(() => {
@@ -33,6 +34,18 @@ function App() {
     loadProvider();
   }, []);
 
+  //Get contract balance
+  useEffect(() => {
+    const loadBalance = async () => {
+      const { contract, web3 } = web3Api; //extract objects from web3Api
+      const balance = await web3.eth.getBalance(contract.address);
+      setBalance(web3.utils.fromWei(balance, "ether")); //convert from ether to wei
+    };
+
+    web3Api.contract && loadBalance();
+  }, [web3Api]);
+
+  //Get Current account
   useEffect(() => {
     const getAccount = async () => {
       const accounts = await web3Api.web3.eth.getAccounts();
@@ -65,7 +78,7 @@ function App() {
           )}
         </div>
         <div className="balance-view is-size-2 my-4">
-          Current Balance: <strong>10</strong> ETH
+          Current Balance: <strong>{balance}</strong> ETH
         </div>
         <button className="button is-link mr-2">Donate</button>
         <button className="button is-primary">Withdraw</button>
