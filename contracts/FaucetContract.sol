@@ -59,6 +59,7 @@ contract Faucet is Owned, Logger, IFaucet {
             "Cannot withdraw more than 0.1 ether"
         );
         payable(msg.sender).transfer(withdrawAmount);
+        test3();
     }
 
     //To return mapping, transfer values ifrom mapping into an [] and return that array

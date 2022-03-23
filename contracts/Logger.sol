@@ -14,7 +14,11 @@ abstract contract Logger {
 
     function emitLog() public pure virtual returns (bytes32);
 
-    function test3() external pure returns (uint256) {
+    //internal means function can be called from child smart contract
+    //private means it can only be called from within the smart contract -children cant
+    //public - functions can be called from outside and within the contract
+    //external - functions can be called from outside but NOT within the contract
+    function test3() internal pure returns (uint256) {
         return 100;
     }
 }
