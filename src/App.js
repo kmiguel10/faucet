@@ -11,8 +11,12 @@ function App() {
     contract: null,
   });
 
+  //States
   const [account, setAccount] = useState(null);
   const [balance, setBalance] = useState(null);
+  const [shouldReload, reload] = useState(false);
+
+  const reloadEffect = () => reload(!shouldReload);
 
   //will load once - runs code after React has updated the DOM
   useEffect(() => {
@@ -43,7 +47,7 @@ function App() {
     };
 
     web3Api.contract && loadBalance();
-  }, [web3Api]);
+  }, [web3Api, shouldReload]); //add shouldReload as dependency
 
   //Get Current account
   useEffect(() => {
@@ -63,6 +67,9 @@ function App() {
       from: account,
       value: web3.utils.toWei("1", "ether"),
     });
+
+    //window.location.reload(); //reload the browser
+    reloadEffect();
   }, [web3Api, account]);
 
   console.log(web3Api.web3);
