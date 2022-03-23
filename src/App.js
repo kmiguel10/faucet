@@ -17,6 +17,9 @@ function App() {
   const [balance, setBalance] = useState(null);
   const [shouldReload, reload] = useState(false);
 
+  //True if connected to an account and has a contract
+  const canConnectToContract = account && web3Api.contract;
+
   //Create a new instance, when shouldReloadValue changes -- which is tied to AddFunds
   const reloadEffect = useCallback(() => reload(!shouldReload), [shouldReload]);
 
@@ -147,15 +150,18 @@ function App() {
         <div className="balance-view is-size-2 my-4">
           Current Balance: <strong>{balance}</strong> ETH
         </div>
+        {!canConnectToContract && (
+          <i className="is-block"> Connect to Ganache</i>
+        )}
         <button
-          disabled={!account}
+          disabled={!canConnectToContract}
           className="button is-link mr-2"
           onClick={addFunds}
         >
           Donate 1 eth
         </button>
         <button
-          disabled={!account}
+          disabled={!canConnectToContract}
           className="button is-primary"
           onClick={withdraw}
         >

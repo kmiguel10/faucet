@@ -11,8 +11,13 @@ export const loadContract = async (name, provider) => {
   const _contract = contract(artifact); //wrap artifact in contract abstraction
   _contract.setProvider(provider); //get provider from window object
 
-  //Ensure that contract is deployed then create an instance of that contract and return that instance
-  const deployedContract = await _contract.deployed();
+  const deployedContract = null;
+  try {
+    //Ensure that contract is deployed then create an instance of that contract and return that instance
+    deployedContract = await _contract.deployed();
+  } catch {
+    console.error("You are connected to the wrong network!");
+  }
 
   return deployedContract;
 };
